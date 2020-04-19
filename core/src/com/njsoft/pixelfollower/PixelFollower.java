@@ -19,7 +19,6 @@ public class PixelFollower extends Game {
 	private Guy goodGuy;
 	private OrthographicCamera camera;
 	private int score;
-    private Enemy enemy;
 	private BitmapFont font;
 	private Music music;
 	private long lastDropTime;
@@ -28,6 +27,7 @@ public class PixelFollower extends Game {
 	private Preferences prefs;
 	private Texture topBarTexture;
 	private Color topBarColor;
+	private Texture texture;
 
 	@Override
 	public void create () {
@@ -44,6 +44,7 @@ public class PixelFollower extends Game {
 		enemiesArray = new Array<Enemy>();
 		topBarColor = new Color(Color.PINK);
 		topBarTexture = createTexture((int) camera.viewportWidth,20,topBarColor);
+		texture = createTexture(10,10, new Color(1,1,1,1));
 		lastDropTime = 0;
 		score = 0;
 		delay = 1000000000;
@@ -55,7 +56,7 @@ public class PixelFollower extends Game {
 		batch.setProjectionMatrix(camera.combined);
 		camera.update();
 
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(51/255f, 51/255f, 51/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
@@ -76,27 +77,29 @@ public class PixelFollower extends Game {
 	}
 
 	private void drawEnemies() {
-		//Enemies draw
+		//Enemies Add
+		Enemy enemy;
 		if (TimeUtils.nanoTime() - lastDropTime > delay || enemiesArray.size == 0 ){
-			enemy = new Enemy(camera);
-			enemiesArray.add(enemy);
-			lastDropTime = TimeUtils.nanoTime();
-			score=score+10;
+				enemy = new Enemy(camera);
+				enemiesArray.add(enemy);
+				lastDropTime = TimeUtils.nanoTime();
+				score = score + 10;
 		}
-
+		//Enemies draw
 		for (int iterator =0; iterator< enemiesArray.size; iterator++) {
 			enemy = enemiesArray.get(iterator);
-			enemiesArray.get(iterator).setPosition(camera,enemy.rectangleLogic.getX()-enemy.movX, enemy.rectangleLogic.getY() - enemy.movY);
-			enemy.draw(createTexture(10,10,enemy.getColor()),batch, 1);
+			enemiesArray.get(iterator).setPosition(camera, enemy.rectangleLogic.getX()- enemy.movX, enemy.rectangleLogic.getY() - enemy.movY);
+
+			enemy.draw(texture,batch);
 			if (enemy.rectangleLogic.overlaps(goodGuy.rectangleLogic)) {
 				enemiesArray.clear();
+				enemiesArray.truncate(1);
 				saveScore(score);
 				score=0;
 				music.stop();
 				music.play();
 			}
 		}
-
 	}
 	private void checkScore() {
 		BitmapFont message = new BitmapFont();

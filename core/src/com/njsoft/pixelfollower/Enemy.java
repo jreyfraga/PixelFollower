@@ -19,11 +19,12 @@ class Enemy extends Actor {
     private int height;
     private int speed;
 
-    private Color[] colors;
 
     Enemy(OrthographicCamera camera) {
+        Color[] colors;
         width = 10;
         height = 10;
+        speed= 5;
         rectangleLogic = new Rectangle();
         rectangleLogic.setSize(width,height);
         //Allocate the size of the array
@@ -38,7 +39,7 @@ class Enemy extends Actor {
         //Color aleatorio
         int rnd = new Random().nextInt(colors.length);
         setColor(colors[rnd]);
-        speed= 5;
+
         movX = (int) Math.round(Math.random() * speed);
         if (movX == 0) {
             rectangleLogic.setPosition(MathUtils.random(0, camera.viewportWidth), camera.viewportHeight);
@@ -50,8 +51,8 @@ class Enemy extends Actor {
 
     }
 
-    void draw(Texture texture, Batch batch, float parentAlpha) {
-        batch.setColor(getColor().r, getColor().g, getColor().b, getColor().a * parentAlpha);
+    void draw(Texture texture, Batch batch) {
+        batch.setColor(getColor().r, getColor().g, getColor().b, getColor().a * 1);
         batch.draw(texture, rectangleLogic.getX(), rectangleLogic.getY(), rectangleLogic.getWidth(), rectangleLogic.getHeight());
     }
 
