@@ -11,16 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import java.util.Random;
 
 
-class Enemy extends Actor {
-    Rectangle rectangleLogic;
-    int movX;
-    int movY;
+public class Enemy extends Actor {
+    public Rectangle rectangleLogic;
+    public int movX;
+    public int movY;
     private int width;
     private int height;
     private int speed;
 
 
-    Enemy(OrthographicCamera camera) {
+    public Enemy(OrthographicCamera camera) {
         Color[] colors;
         width = 10;
         height = 10;
@@ -51,12 +51,12 @@ class Enemy extends Actor {
 
     }
 
-    void draw(Texture texture, Batch batch) {
+    public void draw(Texture texture, Batch batch) {
         batch.setColor(getColor().r, getColor().g, getColor().b, getColor().a * 1);
         batch.draw(texture, rectangleLogic.getX(), rectangleLogic.getY(), rectangleLogic.getWidth(), rectangleLogic.getHeight());
     }
 
-    void setPosition(OrthographicCamera camera, float x, float y) {
+    public void setPosition(OrthographicCamera camera, float x, float y) {
         rectangleLogic.setPosition(x,y);
         if (y < 0) { //limite pantalla
             rectangleLogic.setY(camera.viewportHeight);

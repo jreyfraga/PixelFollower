@@ -15,7 +15,7 @@ public class Guy extends Actor {
     private Texture texture;
     private Color rectangleColor;
 
-    Guy(float x, float y, float width, float height, Color color) {
+    public Guy(float x, float y, float width, float height, Color color) {
 
         rectangleLogic = new Rectangle();
         rectangleLogic.setPosition(x,y);
