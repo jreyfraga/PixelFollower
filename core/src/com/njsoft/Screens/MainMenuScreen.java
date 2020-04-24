@@ -6,39 +6,30 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.njsoft.pixelfollower.PixelFollower;
 
 public class MainMenuScreen implements Screen {
     private final PixelFollower game;
     private Stage stage;
-    private TextureAtlas atlas;
-    private Skin skin;
-    private Texture texture;
     private Image image;
-    
+
     public MainMenuScreen(PixelFollower game)
     {
         this.game = game;
-        atlas = new TextureAtlas("skin/skin.atlas");
-        skin = new Skin(Gdx.files.internal("skin/skin.json"), atlas);
-        texture = new Texture(Gdx.files.internal("icon.png"));
+        Texture texture = new Texture(Gdx.files.internal("icon.png"));
         image = new Image(texture);
-
-       // game.camera.position.set(game.camera.viewportWidth / 2, game.camera.viewportHeight / 2, 0);
         stage = new Stage(new StretchViewport(480,800),game.batch);
 
-        //stage = new Stage(viewport, batch);
     }
-
 
     @Override
     public void show() {
@@ -53,11 +44,11 @@ public class MainMenuScreen implements Screen {
         mainTable.top();
 
         //Create buttons
-        TextButton playButton = new TextButton("Play", skin);
-        TextButton optionsButton = new TextButton("Options", skin);
-        TextButton exitButton = new TextButton("Exit", skin);
+        TextButton playButton = new TextButton("Play", game.skin);
+        TextButton optionsButton = new TextButton("Options", game.skin);
+        TextButton exitButton = new TextButton("Exit", game.skin);
 
-        playButton.setColor( new Color(0, 0, 1, 1));
+        playButton.setColor( new Color(1/255f, 120/255f, 216/255f, 1));
         optionsButton.setColor(new Color(Color.PINK));
         exitButton.setColor(new Color(Color.GRAY));
         //Add listeners to buttons
@@ -73,11 +64,15 @@ public class MainMenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-
+        Label titleLabel = new Label("Pixel Follower", game.skin);
+        titleLabel.setAlignment(Align.center);
+        titleLabel.setFontScale(2);
         //Add buttons to table
-        mainTable.add(image).width(300).height(300).space(50).padTop(50);
+        mainTable.add(image).width(300).height(300).space(20).padTop(40);
         mainTable.row();
-        mainTable.add(playButton).width(350).height(60).space(30);
+        mainTable.add(titleLabel).width(300).height(60).space(10).fillX();
+        mainTable.row();
+        mainTable.add(playButton).width(350).height(60).space(30).padTop(30);
         mainTable.row();
         mainTable.add(optionsButton).width(350).height(60).space(30);
         mainTable.row();
@@ -122,7 +117,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        skin.dispose();
-        atlas.dispose();
+
     }
 }

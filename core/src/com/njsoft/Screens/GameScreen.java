@@ -17,7 +17,7 @@ public class GameScreen implements Screen {
 
     private final PixelFollower game;
     private Guy goodGuy;
-    private int score;
+    private Integer score;
     private Music music;
     private long lastDropTime;
     private Array<Enemy> enemiesArray;
@@ -26,14 +26,14 @@ public class GameScreen implements Screen {
     private Color topBarColor;
     private Texture texture;
 
-    public GameScreen(PixelFollower game) {
+    GameScreen(PixelFollower game) {
         this.game = game;
         music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
         music.setLooping(true);
         music.play();
         Color color = new Color(0, 0, 1, 1);
         goodGuy = new Guy(game.camera.viewportWidth/2,20,30,30, color);
-        enemiesArray = new Array<Enemy>();
+        enemiesArray = new Array<>();
         topBarColor = new Color(Color.PINK);
         topBarTexture = game.createTexture((int) game.camera.viewportWidth,20,topBarColor);
         texture = game.createTexture(10,10, new Color(1,1,1,1));
@@ -110,9 +110,9 @@ public class GameScreen implements Screen {
                 enemiesArray.clear();
                 enemiesArray.truncate(1);
                 saveScore(score);
-                score=0;
                 music.stop();
                 game.setScreen(new EndGameScreen(game,score));
+                score=0;
                 dispose();
 
             }

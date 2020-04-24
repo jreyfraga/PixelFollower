@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.njsoft.Screens.MainMenuScreen;
 
 public class PixelFollower extends Game {
@@ -17,7 +19,8 @@ public class PixelFollower extends Game {
 	public BitmapFont font;
 	public Preferences prefs;
 	private PixelFollower game;
-	private MainMenuScreen mainMenuScreen;
+	private TextureAtlas atlas;
+	public Skin skin;
 
 	@Override
 	public void create () {
@@ -27,7 +30,9 @@ public class PixelFollower extends Game {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 480,800);
 		batch = new SpriteBatch();
-		mainMenuScreen = new MainMenuScreen(this);
+		MainMenuScreen mainMenuScreen = new MainMenuScreen(this);
+		atlas = new TextureAtlas("skin/skin.atlas");
+		skin = new Skin(Gdx.files.internal("skin/skin.json"), atlas);
 		this.setScreen(mainMenuScreen);
 	}
 
@@ -39,6 +44,8 @@ public class PixelFollower extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+        skin.dispose();
+        atlas.dispose();
 	}
 
 	public Texture createTexture(int width, int height, Color color) {
@@ -50,10 +57,5 @@ public class PixelFollower extends Game {
 		pixmap.dispose();
 		return texture;
 	}
-
-	public MainMenuScreen getMainMenuScreen() {
-		return mainMenuScreen;
-	}
-
 
 }
