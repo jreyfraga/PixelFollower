@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.njsoft.pixelfollower.Enemy;
@@ -17,9 +16,8 @@ public class GameScreen implements Screen {
 
     private final PixelFollower game;
     private Guy goodGuy;
-    private Integer score;
+    private long lastDropTime = 0;
     private Music music;
-    private long lastDropTime;
     private Array<Enemy> enemiesArray;
     private long delay;
     private Texture topBarTexture;
@@ -37,8 +35,6 @@ public class GameScreen implements Screen {
         topBarColor = new Color(Color.PINK);
         topBarTexture = game.createTexture((int) game.camera.viewportWidth,20,topBarColor);
         texture = game.createTexture(10,10, new Color(1,1,1,1));
-        lastDropTime = 0;
-        score = 0;
         delay = 1000000000;
     }
 
@@ -56,6 +52,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isTouched()) {
             goodGuy.setPosition(game.camera, Gdx.input.getX(),Gdx.input.getY());
         }
+        game.font.draw(game.batch,"LEVEL: " + game.level, game.camera.viewportWidth/2-30, game.camera.viewportHeight/2);
         goodGuy.draw(game.batch,1);
         drawTopBar();
         drawEnemies();
@@ -89,60 +86,66 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        music.dispose();
     }
+
     private void drawEnemies() {
         //Enemies Add
         Enemy enemy;
         if (TimeUtils.nanoTime() - lastDropTime > delay || enemiesArray.size == 0 ){
-            enemy = new Enemy(game.camera);
+            enemy = new Enemy(game);
             enemiesArray.add(enemy);
             lastDropTime = TimeUtils.nanoTime();
-            score = score + 10;
+            game.score = game.score + 10;
         }
         //Enemies draw
         for (int iterator =0; iterator< enemiesArray.size; iterator++) {
             enemy = enemiesArray.get(iterator);
-            enemiesArray.get(iterator).setPosition(game.camera, enemy.rectangleLogic.getX()- enemy.movX, enemy.rectangleLogic.getY() - enemy.movY);
+            enemiesArray.get(iterator).move();
 
             enemy.draw(texture,game.batch);
             if (enemy.rectangleLogic.overlaps(goodGuy.rectangleLogic)) {
                 enemiesArray.clear();
                 enemiesArray.truncate(1);
-                saveScore(score);
+                saveScore(game.score);
                 music.stop();
-                game.setScreen(new EndGameScreen(game,score));
-                score=0;
+                game.setScreen(new EndGameScreen(game));
                 dispose();
 
             }
         }
     }
     private void checkScore() {
-        BitmapFont message = new BitmapFont();
-        //message.getData().setScale(2);
-        message.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-        if (100 <= score && score <= 110) {
-            message.draw(game.batch,"GREAT!!", 5,game.camera.viewportHeight-15);
+        if (game.score == 600) {
+            game.score = game.score + 10;
+            game.level=2;
+            dispose();
+            game.setScreen(new NextLevelScreen(game));
         }
-        if (200 <= score && score <= 210) {
-            message.draw(game.batch,"MASTER!!", 5,game.camera.viewportHeight-15);
+        if (game.score == 1000) {
+            game.score = game.score + 10;
+            game.level=3;
+            dispose();
+            game.setScreen(new NextLevelScreen(game));
         }
-        if (300 <= score && score <= 310) {
-            message.draw(game.batch,"ULTRA!!", 5,game.camera.viewportHeight-15);
+        if (game.score == 1400) {
+            game.score = game.score + 10;
+            game.level=4;
+            dispose();
+            game.setScreen(new NextLevelScreen(game));
         }
-        if (400 <= score && score <= 410) {
-            message.draw(game.batch,"UNBREAKABLE!!", 5,game.camera.viewportHeight-15);
+        if (game.score == 1700) {
+            game.score = game.score + 10;
+            game.level=5;
         }
-        if (500 <= score && score <= 510) {
-            message.draw(game.batch,"GOD!!", 5,game.camera.viewportHeight-15);
+        if (game.score == 2000) {
+            game.score = game.score + 10;
+            game.level=6;
         }
-        if (600 <= score && score <= 610) {
-            message.draw(game.batch,"STOP THIS!!", 5,game.camera.viewportHeight-15);
-        }
-        if (700 <= score && score <= 710) {
-            message.draw(game.batch,"MADNESS!!", 5,game.camera.viewportHeight-15);
+        if (game.score == 2200) {
+            game.score = game.score + 10;
+            game.level=7;
         }
     }
     private void saveScore(int score) {
@@ -156,7 +159,7 @@ public class GameScreen implements Screen {
     private void drawTopBar() {
         game.batch.setColor(topBarColor);
         game.batch.draw(topBarTexture, 0, game.camera.viewportHeight-40, game.camera.viewportWidth, 40);
-        game.font.draw(game.batch,"Score: " + score, game.camera.viewportWidth/2-30, game.camera.viewportHeight-15);
+        game.font.draw(game.batch,"Score: " + game.score, game.camera.viewportWidth/2-30, game.camera.viewportHeight-15);
         game.font.draw(game.batch,"Record: " + game.prefs.getInteger("score", 0), game.camera.viewportWidth*3/4, game.camera.viewportHeight-15);
         checkScore();
     }

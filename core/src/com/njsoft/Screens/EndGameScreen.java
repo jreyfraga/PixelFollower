@@ -1,6 +1,5 @@
 package com.njsoft.Screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -22,15 +21,13 @@ public class EndGameScreen implements Screen {
     private final PixelFollower game;
     private Stage stage;
     private Image image;
-    private Integer score;
 
-    EndGameScreen(PixelFollower game, int score)
+    EndGameScreen(PixelFollower game)
     {
         this.game = game;
         Texture texture = new Texture(Gdx.files.internal("icon.png"));
         image = new Image(texture);
         stage = new Stage(new StretchViewport(480,800),game.batch);
-        this.score = score;
     }
 
     @Override
@@ -55,20 +52,23 @@ public class EndGameScreen implements Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen(game));
+                dispose();
+                game.score = game.beginLevelScore;
+                game.setScreen(new GameScreen(game));
             }
         });
         menuButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+                dispose();
+                game.setScreen(new MainMenuScreen(game));
             }
         });
 
         Label gameOverLabel = new Label("GAME OVER", game.skin);
         gameOverLabel.setAlignment(Align.center);
         gameOverLabel.setFontScale(3);
-        Label scoreLabel = new Label(score.toString(), game.skin);
+        Label scoreLabel = new Label(game.score.toString(), game.skin);
         scoreLabel.setAlignment(Align.center);
         scoreLabel.setFontScale(3);
         //Add buttons to table
@@ -122,6 +122,6 @@ public class EndGameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }

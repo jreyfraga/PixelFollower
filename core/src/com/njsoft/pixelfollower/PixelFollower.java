@@ -19,8 +19,11 @@ public class PixelFollower extends Game {
 	public BitmapFont font;
 	public Preferences prefs;
 	private PixelFollower game;
+	public Integer score = 0;
+	public Integer beginLevelScore = 0;
 	private TextureAtlas atlas;
 	public Skin skin;
+	public Integer level;
 
 	@Override
 	public void create () {
@@ -33,6 +36,7 @@ public class PixelFollower extends Game {
 		MainMenuScreen mainMenuScreen = new MainMenuScreen(this);
 		atlas = new TextureAtlas("skin/skin.atlas");
 		skin = new Skin(Gdx.files.internal("skin/skin.json"), atlas);
+		level = 1;
 		this.setScreen(mainMenuScreen);
 	}
 

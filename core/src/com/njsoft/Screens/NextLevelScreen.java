@@ -4,10 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -16,19 +14,16 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.njsoft.pixelfollower.PixelFollower;
 
-public class MainMenuScreen implements Screen {
+public class NextLevelScreen implements Screen {
+
     private final PixelFollower game;
     private Stage stage;
-    private Image image;
 
-    public MainMenuScreen(PixelFollower game)
+    NextLevelScreen(PixelFollower game)
     {
+        game.beginLevelScore = game.score;
         this.game = game;
-        Texture texture = new Texture(Gdx.files.internal("icon.png"));
-        image = new Image(texture);
         stage = new Stage(new StretchViewport(480,800),game.batch);
-        game.score=0;
-        game.level = 0;
     }
 
     @Override
@@ -44,44 +39,41 @@ public class MainMenuScreen implements Screen {
         mainTable.top();
 
         //Create buttons
-        TextButton playButton = new TextButton("Play", game.skin);
-        TextButton optionsButton = new TextButton("Options", game.skin);
-        TextButton exitButton = new TextButton("Exit", game.skin);
+        TextButton playButton = new TextButton("Continue!", game.skin);
+        TextButton menuButton = new TextButton("Main Menu", game.skin);
 
         playButton.setColor( new Color(1/255f, 120/255f, 216/255f, 1));
-        optionsButton.setColor(new Color(Color.PINK));
-        exitButton.setColor(new Color(Color.GRAY));
+        menuButton.setColor(new Color(Color.GRAY));
         //Add listeners to buttons
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
-                game.setScreen(new GameScreen(game));
+               game.setScreen(new GameScreen(game));
             }
         });
-        exitButton.addListener(new ClickListener(){
+        menuButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
+                game.level = 1;
+                dispose();
+                game.setScreen(new MainMenuScreen(game));
             }
         });
-        Label titleLabel = new Label("Pixel Follower", game.skin);
-        titleLabel.setAlignment(Align.center);
-        titleLabel.setFontScale(2);
-        Label njSoft = new Label("By NJSoft", game.skin);
-        njSoft.setAlignment(Align.center);
+
+        Label gameOverLabel = new Label("Level "+game.level + " completed", game.skin);
+        gameOverLabel.setAlignment(Align.center);
+        gameOverLabel.setFontScale(3);
+
         //Add buttons to table
-        mainTable.add(image).width(300).height(300).space(20).padTop(40);
-        mainTable.row();
-        mainTable.add(titleLabel).width(300).height(60).space(10).fillX();
+
+        mainTable.add(gameOverLabel).width(300).height(60).space(10).padTop(50).fillX();
         mainTable.row();
         mainTable.add(playButton).width(350).height(60).space(30).padTop(30);
         mainTable.row();
-        mainTable.add(optionsButton).width(350).height(60).space(30);
+        mainTable.add(menuButton).width(350).height(60).space(30).padTop(5);
         mainTable.row();
-        mainTable.add(exitButton).width(350).height(60).space(30);
-        mainTable.row();
-        mainTable.add(njSoft).width(300).height(60).space(10).fillX();
+
         //Add table to stage
         stage.addActor(mainTable);
 
