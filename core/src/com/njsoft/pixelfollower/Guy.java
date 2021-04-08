@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-#NJ2
+#NJ Git
 
 public class Guy extends Actor {
     public Rectangle rectangleLogic;
