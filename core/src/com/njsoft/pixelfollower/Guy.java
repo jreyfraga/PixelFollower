@@ -9,8 +9,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-#Perro
-
 public class Guy extends Actor {
     public Rectangle rectangleLogic;
     private Texture texture;
